@@ -1,0 +1,13 @@
+
+echo "# hello-world" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git remote add origin https://github.com/johnwise10/hello-world.git
+git push -u origin master
+
+git clone https://github.com/johnwise10/hello-world.git	-->	Inicializar repositorio
+git checkout readme-edits 	--> Cambiar de branch
+git add hello.c --> 	Añadir fichero
+git commit --> Añadir fichero a repositorio
+git push -->  Subir fichero a repositorio
