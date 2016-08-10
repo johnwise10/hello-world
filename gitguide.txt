@@ -11,3 +11,6 @@ git checkout readme-edits 	--> Cambiar de branch
 git add hello.c --> 	Añadir fichero
 git commit --> Añadir fichero a repositorio
 git push -->  Subir fichero a repositorio
+git branch -d [branch] --> borrar branch
+git branch -a --> listar branch (todas)
+git branch -r --> listar branch remotas
