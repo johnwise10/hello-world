@@ -16,3 +16,4 @@ git branch -a --> listar branch (todas)
 git branch -r --> listar branch remotas
 git push origin :[nombre rama remota] Eliminar rama remota
 git push origin master:[nombre rama]  crear o modicar rama con original
+git pull
