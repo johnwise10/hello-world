@@ -1,17 +1,14 @@
 
-AS=as
+AS=as --32
 INCLUDEASM=-I ./include/asm
 INCLUDE=-I ./include
 CFLAGS = -Wall -nostdlib -nostartfiles -nodefaultlibs
-LD=ld
-CC=gcc
+LD=ld -melf_i386
+CC=gcc -m32
 CPP=$(CC) -E
 
 all:	kernel.bin
 	objcopy -O elf32-i386 kernel.bin kernel32.bin
-	objcopy kernel32.bin --change-section-lma .text-0xC0000000
-	objcopy kernel32.bin --change-section-lma .rdata-0xC0000000
-	objcopy kernel32.bin --change-section-lma .bss-0xC0000000
 	
 kernel.bin: boot.o kernel.o
 	$(LD) -T link.ld -o kernel.bin boot.o kernel.o   -cref -s -x -M > System.map
@@ -24,9 +21,9 @@ boot.o: boot.asm
 boot.asm: boot.S
 	$(CPP) -D__KERNEL__ $(INCLUDEASM) boot.S -o boot.asm 
 clean:
-	del *.o
-	del *.asm
-	del *.bin
+	rm *.o
+	rm *.asm
+	rm *.bin
 	
 
 	
