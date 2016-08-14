@@ -1,78 +1,101 @@
 
-Se asignan símbolos comunes
-Símbolo común       tamaño            fichero
+Allocating common symbols
+Common symbol       size              file
 
-stack               0x4000            boot.o
+terminal_color      0x1               kernel.o
+terminal_column     0x4               kernel.o
+terminal_buffer     0x4               kernel.o
+terminal_row        0x4               kernel.o
 
-Configuración de la Memoria
+Memory Configuration
 
-Nombre           Origen             Longitud           Atributos
+Name             Origin             Length             Attributes
 *default*        0x0000000000000000 0xffffffffffffffff
 
-Guión del enlazador y mapa de memoria
+Linker script and memory map
 
                 0x0000000000100000                . = 0x100000
 
-.text           0x0000000000100000      0x62b
- *(.setup)
- .setup         0x0000000000100000       0x6e boot.o
-                0x0000000000100000                _start
-                0x0000000000100000                start
+.text           0x0000000000100000      0x1d1
+ *(.multiboot)
+ .multiboot     0x0000000000100000        0xc boot.o
  *(.text)
- .text          0x000000000010006e       0x2c boot.o
- .text          0x000000000010009a      0x591 kernel.o
-                0x000000000010009a                cmain
-                0x0000000000100539                printf
+ .text          0x000000000010000c        0xe boot.o
+                0x000000000010000c                _start
+ *fill*         0x000000000010001a        0x6 
+ .text          0x0000000000100020      0x1b1 kernel.o
+                0x0000000000100020                make_color
+                0x0000000000100030                make_vgaentry
+                0x0000000000100050                strlen
+                0x0000000000100070                terminal_initialize
+                0x00000000001000d0                terminal_setcolor
+                0x00000000001000e0                terminal_putentryat
+                0x0000000000100110                terminal_putchar
+                0x0000000000100180                terminal_writestring
+                0x00000000001001c0                kernel_main
 
-.iplt           0x0000000000100630        0x0
- .iplt          0x0000000000100630        0x0 boot.o
+.iplt           0x00000000001001e0        0x0
+ .iplt          0x0000000000000000        0x0 boot.o
 
-.rodata         0x0000000000101000      0x1fa
+.text.unlikely  0x00000000001001d1        0x0
+ .text.unlikely
+                0x00000000001001d1        0x0 kernel.o
+
+.rel.dyn        0x00000000001001d4        0x0
+ .rel.iplt      0x0000000000000000        0x0 boot.o
+ .rel.text      0x0000000000000000        0x0 boot.o
+
+.rodata
  *(.rodata)
- .rodata        0x0000000000101000      0x1fa kernel.o
 
-.eh_frame       0x00000000001011fc       0xc8
- .eh_frame      0x00000000001011fc       0xc8 kernel.o
+.rodata.str1.1  0x00000000001001d1       0x16
+ .rodata.str1.1
+                0x00000000001001d1       0x16 kernel.o
 
-.rel.dyn        0x00000000001012c4        0x0
- .rel.iplt      0x00000000001012c4        0x0 boot.o
- .rel.text      0x00000000001012c4        0x0 boot.o
+.eh_frame       0x00000000001001e8      0x104
+ .eh_frame      0x00000000001001e8      0x104 kernel.o
 
-.data           0x0000000000102000        0x0
+.data           0x0000000000101000        0x0
  *(.data)
- .data          0x0000000000102000        0x0 boot.o
- .data          0x0000000000102000        0x0 kernel.o
+ .data          0x0000000000101000        0x0 boot.o
+ .data          0x0000000000101000        0x0 kernel.o
 
-.igot.plt       0x00000000001012c4        0x0 dirección de carga 0x0000000000102000
- .igot.plt      0x00000000001012c4        0x0 boot.o
+.igot.plt       0x00000000001002ec        0x0 load address 0x0000000000101000
+ .igot.plt      0x0000000000000000        0x0 boot.o
 
-.bss            0x0000000000102000     0x400c
+.bss            0x0000000000101000     0x4010
  *(COMMON)
- COMMON         0x0000000000102000     0x4000 boot.o
-                0x0000000000102000                stack
+ COMMON         0x0000000000101000       0x10 kernel.o
+                0x0000000000101000                terminal_color
+                0x0000000000101004                terminal_column
+                0x0000000000101008                terminal_buffer
+                0x000000000010100c                terminal_row
  *(.bss)
- .bss           0x0000000000106000        0x0 boot.o
- .bss           0x0000000000106000        0xc kernel.o
+ .bss           0x0000000000101010     0x4000 boot.o
+ .bss           0x0000000000105010        0x0 kernel.o
 LOAD boot.o
 LOAD kernel.o
 OUTPUT(kernel.bin elf32-i386)
 
-.comment        0x0000000000000000       0x25
- .comment       0x0000000000000000       0x25 kernel.o
-                                         0x26 (tamaño antes de la relajación)
+.comment        0x0000000000000000       0x11
+ .comment       0x0000000000000000       0x11 kernel.o
+                                         0x12 (size before relaxing)
 
-.note.GNU-stack
-                0x0000000000000000        0x0
- .note.GNU-stack
-                0x0000000000000000        0x0 kernel.o
+Cross Reference Table
 
-Tabla de Referencias Cruzadas
-
-Símbolo                                          Fichero
+Symbol                                            File
 _start                                            boot.o
-cmain                                             kernel.o
+kernel_main                                       kernel.o
                                                   boot.o
-printf                                            kernel.o
-                                                  boot.o
-stack                                             boot.o
-start                                             boot.o
+make_color                                        kernel.o
+make_vgaentry                                     kernel.o
+strlen                                            kernel.o
+terminal_buffer                                   kernel.o
+terminal_color                                    kernel.o
+terminal_column                                   kernel.o
+terminal_initialize                               kernel.o
+terminal_putchar                                  kernel.o
+terminal_putentryat                               kernel.o
+terminal_row                                      kernel.o
+terminal_setcolor                                 kernel.o
+terminal_writestring                              kernel.o
